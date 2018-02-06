@@ -69,8 +69,8 @@ clean_answers = []
 for answer in answers:
     clean_answers.append(clean_text(answer))
 
-clean_questions = clean_questions[:5000]
-clean_answers = clean_answers[:5000]
+clean_questions = clean_questions[:10000]
+clean_answers = clean_answers[:10000]
 #Creating a dictionary that maps each word to its number of occurance
 word2count = {}
 
@@ -282,7 +282,7 @@ def decoder_rnn(decoder_embedded_inputs, decoder_embeddings_matrix, encoder_stat
 #Building the seq2seq model
 def seq2seq_model(inputs, targets, keep_prob, batch_size, sequence_length, answers_num_words, 
                   questions_num_words, encoder_embedding_size, decoder_embedding_size, rnn_size,
-                  num_layers, questonswords2int):
+                  num_layers, questionswords2int):
     
     encoder_embedded_inputs = tf.contrib.layers.embed_sequence(inputs, answers_num_words+1,
                                                                   encoder_embedding_size,
@@ -310,7 +310,7 @@ encoding_embedding_size = 512
 decoding_embedding_size = 512
 learning_rate = 0.01
 learning_rate_decay = 0.9
-min_learning_rate = 0.0001
+min_learning_rate = 0.001
 keep_probability = 0.5
 
 #Defining the session
@@ -411,7 +411,7 @@ for epoch in range(1,epochs+1):
             ending_time = time.time()
             batch_time = ending_time-starting_time
             average_validation_loss_error = total_validation_loss_error/(len(validation_questions)/batch_size)
-            print("Validation Loss Error: {:>6.3f}, Batch Validation Time: {:d} seconds.".format(average_validation_loss_error,
+            print("Validation Loss Error: {:>6.3f}, Batch Validation Time: {:f} seconds.".format(average_validation_loss_error,
                   batch_time))
             
             learning_rate *= learning_rate_decay
@@ -455,8 +455,10 @@ while(True):
     if question=="Goodbye":
         break
     
+        
+    #question = question + ["<PAD>"]*(20-len(question))
     question = convert_string2int(question, questionswords2int)
-    question = question + ["<PAD>"]*(20-len(question))
+    question = question + [questionswords2int["<PAD>"]]*(20-len(question))
     fake_batch = np.zeros([batch_size,20])
     fake_batch[0] = question
     predicted_answer = session.run(test_predictions, {inputs:fake_batch, keep_prob:0.5})[0]
@@ -468,6 +470,8 @@ while(True):
             token = "."
         elif answersints2word[i]=="<OUT>":
             token = "out"
+        elif answersints2word[i]=="<PAD>":
+            token = "pad"
         else:
             token = " " + answersints2word[i]
             
