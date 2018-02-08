@@ -20,7 +20,11 @@ from keras.callbacks import EarlyStopping, ModelCheckpoint
 from History import LossHistory
 
 #HYPERPARAMETERS
-hidden_size = 
+hidden_size =
+training_file
 
 class KerasModel(object):
-    def __inti__(self, argparams):
+    def __init__(self, argparams):
+        self.hidden_size = hidden_size
+        self.learning_rate = learning_rate
+        
