@@ -159,6 +159,109 @@ class LossHistory(Callback):
         self.losses = []
     def on_batch_end(self, batch, logs={}):
         self.losses.append(logs.get('loss'))
+        
+
+class KerasModel(object):
+    def __init__(self, argparams):
+        self.hidden_size = argparams['hidden_size'] # size of hidden layer of neurons 
+        self.learning_rate = argparams['learning_rate']
+        self.training_file = argparams['train_data_path']
+        self.validation_file = argparams['dev_data_path']
+        self.test_file = argparams['test_data_path']
+        self.result_path = argparams['result_path']
+        self.train_numfile = argparams['train_numfile']
+        self.dev_numfile = argparams['dev_numfile']
+        self.test_numfile = argparams['test_numfile']
+        self.update_f = argparams['sgdtype'] # options: adagrad, rmsprop, vanilla. default: vanilla
+        self.decay_rate = argparams['decay_rate'] # for rmsprop
+        self.default = argparams['default_flag'] # True: use defult values for optimizer
+        self.momentum = argparams['momentum'] # for vanilla update
+        self.max_epochs = argparams['max_epochs']
+        self.activation = argparams['activation_func'] # options: tanh, sigmoid, relu. default: relu
+        self.smooth_eps = argparams['smooth_eps'] # for adagrad and rmsprop
+        self.batch_size = argparams['batch_size']
+        self.input_type = argparams['input_type'] # options: 1hot, embedding, predefined
+        self.emb_dict = argparams['embedding_file']
+        self.embedding_size = argparams['embedding_size']
+        self.dropout = argparams['dropout']
+        self.dropout_ratio = argparams['dropout_ratio']
+        self.iter_per_epoch = argparams['iter_per_epoch']
+        self.arch = argparams['arch']
+        self.init_type = argparams['init_type']
+        self.fancy_forget_bias_init = argparams['forget_bias']
+        self.time_length = argparams['time_length']
+        self.his_length = argparams['his_length']
+        self.mdl_path = argparams['mdl_path']
+        self.log = argparams['log']
+        self.record_epoch = argparams['record_epoch']
+        self.load_weight = argparams['load_weight']
+        self.combine_his = argparams['combine_his']
+        self.time_decay = argparams['time_decay']
+        self.shuffle = argparams['shuffle']
+        self.set_batch = argparams['set_batch']
+        self.tag_format = argparams['tag_format']
+        self.e2e_flag = argparams['e2e_flag']
+        self.output_att = argparams['output_att']
+        self.sembedding_size = self.embedding_size
+        self.model_arch = self.arch
+        
+        if self.validation_file is None:
+            self.nodev = True
+        else:
+            self.nodev = False
+        if self.input_type=="embedding":
+            self.model_arch = self.model_arch + "emb"
+        if self.time_decay:
+            self.model_arch = self.model_arch + "+T"
+        if self.e2e_flag:
+            self.model_arch = 'e2e-' + self.model_arch
+            
+    def test(self, H, X, data_type, tadDict, pad_data):
+        if self.default:
+            target_file = self.result_path + '/' + self.model_arch + '_H-'+str(self.hidden_size)+'_O-'+self.update_f+'_A-'+self.activation+'_WR-'+self.input_type
+        else:
+            target_file = self.result_path + '/' + self.model_arch +'-LR-'+str(self.learning_rate)+'_H-'+str(self.hidden_size)+'_O-'+self.update_f+'_A-'+self.activation+'_WR-'+self.input_type
+        
+        if 'memn2n' in self.arch or self.arch[0] == 'h':
+            batch_data = [H, X]
+        else:
+            batch_data = X
+            
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
