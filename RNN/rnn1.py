@@ -36,7 +36,45 @@ W2 = tf.Variable(np.random.rand(state_size, num_classes), dtype=tf.float32)
 b2 = tf.Variable(np.zeros((1, num_classes)), dtype=tf.float32)
 
 #unpack columns
-inputs_series = tf.unpack(batchX_placeholder, axis=1)
-labels_series = tf.unpack(batchY_placeholder, axis=1)
+inputs_series = tf.unstack(batchX_placeholder, axis=1)
+labels_series = tf.unstack(batchY_placeholder, axis=1)
+
+#forward pass
+current_state = init_state
+states_series = []
+
+for current_input in inputs_series:
+    current_input = tf.reshape(current_input, [batch_size,1])
+    input_and_state_concatenated = tf.concat([current_input, current_state],1)
+    
+    next_state = tf.tanh(tf.matmul(input_and_state_concatenated,W)+b)
+    states_series.append(next_state)
+    current_state = next_state
+
+#Calculating loss
+logits_series = [tf.matmul(state,W2)+b2 ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
  
