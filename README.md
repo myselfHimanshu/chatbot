@@ -1,6 +1,11 @@
 # Chatbot
 
-Building Chatbot with Deep NLP.
+## BBuilding Chatbot with Deep NLP.
+
+Main Folder : chatbot_DNLP
+
+- Trained on movie dialogue dataset.
+- Library Used : Tensorflow
 
 0. Installing Anaconda and Getting the Dataset.
 1. Data Preprocessing.
